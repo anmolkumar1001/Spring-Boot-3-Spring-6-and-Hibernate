@@ -4,10 +4,14 @@ import com.anmol.springboot.cruddemo.dao.EmployeeDAO;
 import com.anmol.springboot.cruddemo.entity.Employee;
 import com.anmol.springboot.cruddemo.service.EmployeeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+
+import static org.apache.tomcat.jni.SSLConf.apply;
 
 @RestController
 @RequestMapping("/api")
@@ -15,9 +19,12 @@ public class EmployeeRestController {
 
     private EmployeeService employeeService;
 
+    private ObjectMapper objectMapper;
+
     @Autowired
     public EmployeeRestController(EmployeeService theEmployeeService, ObjectMapper theObjectMapper) {
         employeeService = theEmployeeService;
+        objectMapper = theObjectMapper;
     }
 
     @GetMapping("/employees")
@@ -60,6 +67,43 @@ public class EmployeeRestController {
         Employee dbEmployee = employeeService.save(theEmployee);
 
         return dbEmployee;
+    }
+
+    // add mapping for PATCH /employee/{employeeId} - patch employee ... partial update
+    @PatchMapping("/employees/{employeeId}")
+    public Employee patchEmployee(@PathVariable int employeeId, @RequestBody Map<String, Object> patchPayload) {
+
+        Employee tempEmployee = employeeService.findById(employeeId);
+
+        // throw exception if null
+        if(tempEmployee == null) {
+            throw new RuntimeException("Exception id not found - " + employeeId);
+        }
+
+        // throw exception if request body contain "id" key
+        if(patchPayload.containsKey("id")) {
+            throw new RuntimeException("Employee id not allowed in request body - " + employeeId);
+        }
+
+        Employee patchedEmployee = apply(patchPayload, tempEmployee);
+
+        Employee dbEmployee = employeeService.save(patchedEmployee);
+
+        return dbEmployee;
+    }
+
+    private Employee apply(Map<String, Object> patchPayload, Employee tempEmployee) {
+
+        // Convert employee object to a JSON object node
+        ObjectNode employeeNode = objectMapper.convertValue(tempEmployee, ObjectNode.class);
+
+        // Convert the patchPayload map to a JSON object node
+        ObjectNode patchNode = objectMapper.convertValue(patchPayload, ObjectNode.class);
+
+        // Merge the patch updates into the employee node
+        employeeNode.setAll(patchNode);
+
+        return objectMapper.convertValue(employeeNode, Employee.class);
     }
 
 
