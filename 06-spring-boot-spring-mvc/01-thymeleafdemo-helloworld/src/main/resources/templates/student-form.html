@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Student Registration Form</title>
@@ -35,6 +35,16 @@
 <!--    <input type="radio" th:field="*{favoriteLanguage}" th:value="Python">Python</input>-->
 
     <input type="radio" th:field="*{favoriteLanguage}" th:each="tempLang : ${languages}" th:value="${tempLang}" th:text="${tempLang}" />
+
+    <br><br>
+
+    Favorite Operating Systems:
+
+<!--    <input type="checkbox" th:field="*{favoriteSystems}" th:value="Linux">Linux</input>-->
+<!--    <input type="checkbox" th:field="*{favoriteSystems}" th:value="macOS">macOS</input>-->
+<!--    <input type="checkbox" th:field="*{favoriteSystems}" th:value="'Microsoft Windows'">Microsoft Windows</input>-->
+
+    <input type="checkbox" th:field="*{favoriteSystems}" th:each="tempSystem : ${systems}" th:value="${tempSystem}" th:text="${tempSystem}"/>
 
     <br><br>
 
