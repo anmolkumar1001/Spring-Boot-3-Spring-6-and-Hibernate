@@ -1,7 +1,7 @@
-package com.anmol.springboot.cruddemo.service;
+package com.anmol.springboot.thymeleafdemo.service;
 
-import com.anmol.springboot.cruddemo.dao.EmployeeRepository;
-import com.anmol.springboot.cruddemo.entity.Employee;
+import com.anmol.springboot.thymeleafdemo.dao.EmployeeRepository;
+import com.anmol.springboot.thymeleafdemo.entity.Employee;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ public class EmployeeServiceImpl implements EmployeeService{
     @Override
     public List<Employee> findAll() {
 
-        return employeeRepository.findAll();
+        return employeeRepository.findAllByOrderByLastNameAsc();
     }
 
     @Override

@@ -1,6 +1,6 @@
-package com.anmol.springboot.cruddemo.service;
+package com.anmol.springboot.thymeleafdemo.service;
 
-import com.anmol.springboot.cruddemo.entity.Employee;
+import com.anmol.springboot.thymeleafdemo.entity.Employee;
 
 import java.util.List;
 
